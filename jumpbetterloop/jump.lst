@@ -1,0 +1,31 @@
+     1                                  extern  printf
+     2                                  
+     3                                  section .data
+     4 00000000 00CA9A3B00000000            number dq  1000000000
+     5 00000008 53756D61206F642030-         fmt    db "Suma od 0 do %ld, to %ld", 10, 0
+     5 00000011 20646F20256C642C20-
+     5 0000001A 746F20256C640A00   
+     6                                  section .bss
+     7                                  section .text
+     8                                  	global main
+     9                                  main:
+    10 00000000 55                      	push rbp		    ; prolog funkcji
+    11 00000001 4889E5                  	mov rbp, rsp		; prolog funkcji
+    12                                  
+    13 00000004 488B0C25[00000000]          mov rcx, [number]   ; inicjalizacja rcx liczba
+    14 0000000C B800000000                  mov rax, 0          ; suma
+    15                                  
+    16                                  bloop:
+    17 00000011 4801C8                      add rax, rcx
+    18 00000014 E2FB                        loop bloop          ; zapletalmy, jednoczesnie dec o 1, az rcx = 0
+    19                                  
+    20 00000016 48BF-                       mov rdi, fmt
+    20 00000018 [0800000000000000] 
+    21 00000020 488B3425[00000000]          mov rsi, [number]
+    22 00000028 4889C2                      mov rdx, rax
+    23 0000002B B800000000                  mov rax, 0
+    24 00000030 E8(00000000)                call printf
+    25                                  
+    26 00000035 4889EC                  	mov rsp, rbp    	; epilog funkcji
+    27 00000038 5D                      	pop rbp		        ; epilog funkcji
+    28 00000039 C3                          ret

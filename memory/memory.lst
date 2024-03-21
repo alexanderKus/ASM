@@ -1,0 +1,43 @@
+     1                                  section .data
+     2 00000000 7B                          bNum    db  123
+     3 00000001 3930                        wNum    dw  12345
+     4 00000003 0000<rep 5h>                wArray  times   5   dw  0   ; tablice 5 elementow typu word (2bytes) rownych 0
+     5 0000000D 39300000                    dNum    dd  12345
+     6 00000011 3930000000000000            qNum1   dq  12345
+     7 00000019 61626300                    text1   db  "abc", 0
+     8 0000001D 6E861BF0F9210940            qNum2   dq  3.14159
+     9 00000025 63646500                    text2   db  "cde", 0
+    10                                  section .bss
+    11 00000000 ??                          bvar    resb    1
+    12 00000001 ????????                    dvar    resd    1
+    13 00000005 <res 14h>                   wvar    resw    10
+    14 00000019 <res 3A980h>                qvar    resq    30000
+    15                                  section .text
+    16                                  	global main
+    17                                  main:
+    18 00000000 55                      	push rbp
+    19 00000001 4889E5                  	mov rbp, rsp
+    20                                  
+    21 00000004 488D0425[00000000]          lea rax, [bNum]     ; wczytaj adres bNum do rax
+    22 0000000C 48B8-                       mov rax, bNum       ; wczutaj adres bNum do rax
+    22 0000000E [0000000000000000] 
+    23 00000016 488B0425[00000000]          mov rax, [bNum]     ; wczutaj wartosc pod adresem bNum do rax
+    24                                  
+    25 0000001E 48890425[00000000]          mov [bvar], rax     ; zapisz wartosc w rax pod adresem bvar
+    26 00000026 488D0425[00000000]          lea rax, [bvar]     ; wczytaj adres bvar do rax
+    27                                  
+    28 0000002E 488D0425[01000000]          lea rax, [wNum]     ; wczytaj adres wNum do rax
+    29 00000036 488B0425[01000000]          mov rax, [wNum]     ; wczytaj zawartosc wNum do rax
+    30                                  
+    31 0000003E 488D0425[19000000]          lea rax, [text1]    ; wczytaj ades text1 do rax
+    32 00000046 48B8-                       mov rax, text1      ; wczytaj adres text1 do rax
+    32 00000048 [1900000000000000] 
+    33 00000050 48B8-                       mov rax, text1+1     ; wczutaj adres drugiego znaku text1 do rax
+    33 00000052 [1A00000000000000] 
+    34 0000005A 488D0425[1A000000]          lea rax, [text1+1]  ; wczutaj adres drugiego znaku test1 do rax
+    35 00000062 488B0425[19000000]          mov rax, [text1]    ; wczytaj zawartosc zaczynajaca sie od text1 do rax
+    36 0000006A 488B0425[1A000000]          mov rax, [text1+1]  ; wczutaj zawartosc zaczynajaca sie od test1+1 do rax
+    37                                  
+    38 00000072 4889EC                  	mov rsp, rbp
+    39 00000075 5D                      	pop rbp
+    40 00000076 C3                          ret

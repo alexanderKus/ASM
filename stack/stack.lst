@@ -1,0 +1,62 @@
+     1                                  extern printf
+     2                                  
+     3                                  section .data
+     4 00000000 414243444500                strng       db  "ABCDE", 0
+     5                                      strngLen    equ     $ - strng - 1   ; dlugosc lancucha bez 10 i 0  
+     6 00000006 4F726967696E616C3A-         fmt1        db  "Original: %s", 10, 0
+     6 0000000F 2025730A00         
+     7 00000014 52657665727365643A-         fmt2        db  "Reversed: %s", 10, 0
+     7 0000001D 2025730A00         
+     8                                  section .bss
+     9                                  section .text
+    10                                  	global main
+    11                                  
+    12                                  main:
+    13 00000000 55                      	push rbp		    ; prolog funkcji
+    14 00000001 4889E5                  	mov rbp, rsp		; prolog funkcji
+    15                                  
+    16                                  ; wyswietl orignaly string
+    17 00000004 48BF-                       mov rdi, fmt1
+    17 00000006 [0600000000000000] 
+    18 0000000E 48BE-                       mov rsi, strng
+    18 00000010 [0000000000000000] 
+    19 00000018 B800000000                  mov rax, 0
+    20 0000001D E8(00000000)                call printf   
+    21                                  
+    22                                  ; znak po znasku odkladamy na stos
+    23 00000022 4831C0                      xor rax, rax
+    24 00000025 48BB-                       mov rbx, strng
+    24 00000027 [0000000000000000] 
+    25 0000002F B905000000                  mov rcx, strngLen
+    26 00000034 41BC00000000                mov r12, 0          ; R12 jako wskaznik
+    27                                  
+    28                                      pushLoop:
+    29 0000003A 428A0423                        mov al, byte[rbx+r12]   ; przenosiny znak do rax
+    30 0000003E 50                              push rax                ; odkladamu rax na stos
+    31 0000003F 49FFC4                          inc r12
+    32 00000042 E2F6                            loop pushLoop
+    33                                  
+    34 00000044 48BB-                           mov rbx, strng
+    34 00000046 [0000000000000000] 
+    35 0000004E B905000000                      mov rcx, strngLen
+    36 00000053 41BC00000000                    mov r12, 0
+    37                                     
+    38                                      popLoop:
+    39 00000059 58                              pop rax
+    40 0000005A 42880423                        mov byte [rbx+r12], al
+    41 0000005E 49FFC4                          inc r12
+    42 00000061 E2F6                            loop popLoop
+    43 00000063 42C6042300                      mov byte[rbx+r12], 0    ; konczymy lancuch znakiem 0
+    44                                  
+    45                                  ; wyswietl odwrocony string
+    46 00000068 48BF-                       mov rdi, fmt2
+    46 0000006A [1400000000000000] 
+    47 00000072 48BE-                       mov rsi, strng
+    47 00000074 [0000000000000000] 
+    48 0000007C B800000000                  mov rax, 0
+    49 00000081 E8(00000000)                call printf   
+    50                                      
+    51 00000086 4889EC                  	mov rsp, rbp    	; epilog funkcji
+    52 00000089 5D                      	pop rbp		        ; epilog funkcji
+    53                                  
+    54 0000008A C3                          ret

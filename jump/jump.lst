@@ -1,0 +1,39 @@
+     1                                  extern  printf
+     2                                  section .data
+     3 00000000 2A                          number1 db  42
+     4 00000001 2A                          number2 db  42
+     5 00000002 4C69637A626131203E-         fmt1    db "Liczba1 >= Liczba2", 10, 0
+     5 0000000B 3D204C69637A626132-
+     5 00000014 0A00               
+     6 00000016 4C69637A626132203E-         fmt2    db "Liczba2 >= Liczba1", 10, 0
+     6 0000001F 3D204C69637A626131-
+     6 00000028 0A00               
+     7                                  section .bss
+     8                                  section .text
+     9                                  	global main
+    10                                  main:
+    11 00000000 55                      	push rbp		    ; prolog funkcji
+    12 00000001 4889E5                  	mov rbp, rsp		; prolog funkcji
+    13                                  
+    14 00000004 488B0425[00000000]          mov rax, [number1] ; wczytaj liczby do rejestrow
+    15 0000000C 488B1C25[01000000]          mov rbx, [number2]
+    16                                  
+    17 00000014 4839D8                      cmp rax, rbx
+    18 00000017 7D16                        jge greater
+    19                                  
+    20 00000019 48BF-                       mov rdi, fmt2
+    20 0000001B [1600000000000000] 
+    21 00000023 B800000000                  mov rax, 0
+    22 00000028 E8(00000000)                call printf
+    23 0000002D EB14                        jmp exit
+    24                                  
+    25                                  greater:
+    26 0000002F 48BF-                       mov rdi, fmt1
+    26 00000031 [0200000000000000] 
+    27 00000039 B800000000                  mov rax, 0
+    28 0000003E E8(00000000)                call printf
+    29                                  
+    30                                  exit:
+    31 00000043 4889EC                  	mov rsp, rbp    	; epilog funkcji
+    32 00000046 5D                      	pop rbp		        ; epilog funkcji
+    33 00000047 C3                          ret

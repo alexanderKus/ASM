@@ -1,0 +1,56 @@
+     1                                  extern printf
+     2                                  
+     3                                  %define double_it(r)    sal rax, 1
+     4                                  
+     5                                  %macro  prntf    2
+     6                                      section .data
+     7                                          %%arg1      db  %1, 0           ; pierwszy argument
+     8                                          %%fmtint    db  "%s %ld", 10, 0 ; drugi argument
+     9                                      section .text 
+    10                                          mov rdi, %%fmtint
+    11                                          mov rsi, %%arg1
+    12                                          mov rdx, [%2]
+    13                                          xor rax, rax
+    14                                          call printf
+    15                                  %endmacro
+    16                                  
+    17                                  section .data
+    18 00000000 0F00000000000000            number      dq      15
+    19                                  section .bss
+    20                                  section .text
+    21                                  	global main
+    22                                  main:
+    23 00000000 55                      	push rbp
+    24 00000001 4889E5                  	mov rbp, rsp
+    25                                  
+    26                                      prntf   "number: ", number
+     6                              <1>  section .data
+     7 00000008 6E756D6265723A2000  <1>  %%arg1 db %1, 0
+     8 00000011 257320256C640A00    <1>  %%fmtint db "%s %ld", 10, 0
+     9                              <1>  section .text
+    10 00000004 48BF-               <1>  mov rdi, %%fmtint
+    10 00000006 [1100000000000000]  <1>
+    11 0000000E 48BE-               <1>  mov rsi, %%arg1
+    11 00000010 [0800000000000000]  <1>
+    12 00000018 488B1425[00000000]  <1>  mov rdx, [%2]
+    13 00000020 4831C0              <1>  xor rax, rax
+    14 00000023 E8(00000000)        <1>  call printf
+    27 00000028 488B0425[00000000]          mov     rax, [number]
+    28 00000030 48D1E0                      double_it(rax)
+    29 00000033 48890425[00000000]          mov     [number], rax
+    30                                      prntf   "Two time 15 is", number
+     6                              <1>  section .data
+     7 00000019 54776F2074696D6520- <1>  %%arg1 db %1, 0
+     7 00000022 313520697300        <1>
+     8 00000028 257320256C640A00    <1>  %%fmtint db "%s %ld", 10, 0
+     9                              <1>  section .text
+    10 0000003B 48BF-               <1>  mov rdi, %%fmtint
+    10 0000003D [2800000000000000]  <1>
+    11 00000045 48BE-               <1>  mov rsi, %%arg1
+    11 00000047 [1900000000000000]  <1>
+    12 0000004F 488B1425[00000000]  <1>  mov rdx, [%2]
+    13 00000057 4831C0              <1>  xor rax, rax
+    14 0000005A E8(00000000)        <1>  call printf
+    31                                  
+    32 0000005F C9                          leave
+    33 00000060 C3                          ret
